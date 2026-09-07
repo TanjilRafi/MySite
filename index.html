@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tanjil Sarker Rafi — Portfolio</title>
+<meta name="description" content="Tanjil Sarker Rafi — Computing Science student at the University of Alberta. Full-stack software engineer focused on optimized code, async Python, caching, and robust error handling." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="particle-canvas"></canvas>
+<!-- The Interstitial Weave: a Three.js data-lattice layered behind the real 2D site.
+     Progressive enhancement only — if WebGL/init fails, this canvas stays empty
+     and the site above renders exactly as it always has. -->
+<canvas id="loom-canvas" aria-hidden="true"></canvas>
+
+<!-- ================= NAVBAR ================= -->
+<header class="navbar" id="navbar">
+  <div class="navbar__inner">
+    <a href="#hero" class="brand">
+      <img class="brand__mark" src="profile-pic.jpg" alt="Tanjil Sarker Rafi" />
+      <span class="brand__name" data-i18n="nav.name">Tanjil Sarker Rafi</span>
+    </a>
+
+    <nav class="nav-links" id="nav-links">
+      <a href="#about" data-i18n="nav.about">About</a>
+      <a href="#techstack" data-i18n="nav.tech">Tech Stack</a>
+      <a href="#experience" data-i18n="nav.experience">Experience</a>
+      <a href="#projects" data-i18n="nav.projects">Projects</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
+    </nav>
+
+    <div class="navbar__actions">
+      <button class="lang-toggle" id="lang-toggle" aria-label="Toggle language">
+        <span class="lang-toggle__opt is-active" data-lang="en">EN</span>
+        <span class="lang-toggle__sep">/</span>
+        <span class="lang-toggle__opt" data-lang="fr">FR</span>
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ================= HERO / ABOUT ================= -->
+  <section class="section hero" id="hero">
+    <div class="section__decor hero__decor" aria-hidden="true">
+      <svg viewBox="0 0 200 200" class="poly poly--1"><polygon points="100,10 190,60 190,140 100,190 10,140 10,60" /></svg>
+      <svg viewBox="0 0 200 200" class="poly poly--2"><circle cx="100" cy="100" r="70" /></svg>
+      <svg viewBox="0 0 200 200" class="poly poly--3"><polygon points="100,20 180,180 20,180" /></svg>
+    </div>
+
+    <div class="container hero__grid" id="about">
+      <p class="eyebrow" data-i18n="hero.eyebrow">INTRODUCTION</p>
+      <h1 class="display" data-i18n="hero.title">Overview.</h1>
+      <p class="lede" data-i18n="hero.body">
+        Hey, I'm Tanjil — a Computing Science student at the University of Alberta with a deep
+        passion for full-stack software engineering. I care about writing code that's not just
+        correct, but optimized and refactored to be lean, readable, and built to last. I spend a
+        lot of time in the weeds of Python asynchronous execution, caching strategies, and robust
+        error handling — the kind of details that keep systems fast and dependable under real load.
+        I'm always looking for the next hard problem to build my way through.
+      </p>
+      <div class="hero__actions">
+        <a class="btn-pill" id="resume-btn" href="assets/resume/Tanjil_Rafi_Resume.pdf" target="_blank" rel="noopener">
+          <span data-i18n="hero.resume">View Resume</span>
+        </a>
+        <a class="btn-ghost" href="#projects" data-i18n="hero.work">See my work →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TECH STACK ================= -->
+  <section class="section techstack" id="techstack">
+    <div class="container">
+      <p class="eyebrow" data-i18n="tech.eyebrow" data-reveal>WHAT I KNOW</p>
+      <h2 class="display display--sm" data-i18n="tech.title" data-reveal style="--reveal-delay:90ms">Tech Stack.</h2>
+
+      <div class="tech-grid" id="tech-grid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EXPERIENCE ================= -->
+  <section class="section experience" id="experience">
+    <div class="container">
+      <p class="eyebrow" data-i18n="exp.eyebrow" data-reveal>WHERE I'VE BEEN</p>
+      <h2 class="display display--sm" data-i18n="exp.title" data-reveal style="--reveal-delay:90ms">Experience.</h2>
+
+      <div class="timeline">
+        <div class="timeline__line" aria-hidden="true"></div>
+
+        <article class="timeline__item">
+          <div class="timeline__node"></div>
+          <div class="glass glow-border timeline__card" data-reveal>
+            <span class="timeline__date" data-i18n="exp.ta.date">Sep 2025 — Dec 2025</span>
+            <h3 data-i18n="exp.ta.role">Teaching Assistant, Introductory Programming (CMPUT 174)</h3>
+            <p class="timeline__org" data-i18n="exp.ta.org">University of Alberta · Edmonton, AB</p>
+            <ul>
+              <li data-i18n="exp.ta.b1">Evaluated student code and explained correct approaches clearly to students at widely different skill levels.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="timeline__item">
+          <div class="timeline__node"></div>
+          <div class="glass glow-border timeline__card" data-reveal>
+            <span class="timeline__date" data-i18n="exp.intern.date">May 2024 — Sep 2024</span>
+            <h3 data-i18n="exp.intern.role">Software Developer Intern</h3>
+            <p class="timeline__org" data-i18n="exp.intern.org">Nexfolyo (Hybrid) · Edmonton, AB</p>
+            <ul>
+              <li data-i18n="exp.intern.b1">Developed and maintained full-stack features, building user-facing front-end components in React.js on a 6–7 person Agile team.</li>
+              <li data-i18n="exp.intern.b2">Reviewed peers' code through pull requests to ensure consistency and adherence to best practices.</li>
+              <li data-i18n="exp.intern.b3">Troubleshot and resolved software issues, coordinating changes through Git and GitHub using branches and pull requests.</li>
+              <li data-i18n="exp.intern.b4">Delivered work against requirements reviewed weekly with a product manager, presenting written and verbal progress updates.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROJECTS ================= -->
+  <section class="section projects" id="projects">
+    <div class="container">
+      <p class="eyebrow" data-i18n="proj.eyebrow" data-reveal>WHAT I'VE BUILT</p>
+      <h2 class="display display--sm" data-i18n="proj.title" data-reveal style="--reveal-delay:90ms">Projects.</h2>
+
+      <div class="project-grid" id="project-grid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section class="section contact" id="contact">
+    <div class="container contact__grid">
+      <div>
+        <p class="eyebrow" data-i18n="contact.eyebrow" data-reveal>GET IN TOUCH</p>
+        <h2 class="display display--sm" data-i18n="contact.title" data-reveal style="--reveal-delay:90ms">Contact.</h2>
+        <p class="lede" data-i18n="contact.body" data-reveal style="--reveal-delay:160ms">
+          Have a role, a project, or just a hard problem you want to talk through? My inbox is open.
+        </p>
+      </div>
+
+      <div class="glass glow-border contact__card" data-reveal>
+        <a class="contact__row" href="mailto:tanjilsarker77@gmail.com">
+          <span class="contact__icon" aria-hidden="true">✉</span>
+          <span>tanjilsarker77@gmail.com</span>
+        </a>
+        <a class="contact__row" href="https://github.com/TanjilRafi" target="_blank" rel="noopener" id="github-link">
+          <span class="contact__icon" aria-hidden="true">⌥</span>
+          <span data-i18n="contact.github">github.com/TanjilRafi</span>
+        </a>
+        <a class="contact__row" href="https://linkedin.com/in/tanjil-rafi-4b3b47391" target="_blank" rel="noopener" id="linkedin-link">
+          <span class="contact__icon" aria-hidden="true">in</span>
+          <span data-i18n="contact.linkedin">linkedin.com/in/tanjil-rafi</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer__build">
+    <div class="footer__badges" aria-hidden="true">
+      <img src="https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/html5/html5-original.svg" alt="" />
+      <img src="https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/css3/css3-original.svg" alt="" />
+      <img src="https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/javascript/javascript-original.svg" alt="" />
+    </div>
+    <p class="footer__build-line" data-i18n="footer.build.line">Designed &amp; built from scratch with HTML5, CSS3, and vanilla JavaScript — no templates, no page builders, no frameworks.</p>
+    <p class="footer__build-sub" data-i18n="footer.build.sub">Hand-rolled: a canvas particle engine, CSS-only glassmorphism with animated gradient borders, IntersectionObserver-driven scroll reveals, and a custom bilingual (EN/FR) content system.</p>
+  </div>
+  <p>&copy; <span id="year"></span> Tanjil Sarker Rafi. <span data-i18n="footer.rights">All rights reserved.</span></p>
+</footer>
+
+<script src="js/i18n.js"></script>
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script type="module" src="js/three/loom-overlay.js"></script>
+</body>
+</html>
