@@ -62,6 +62,19 @@ function animateValue(duration, onUpdate, easing, ffFlag) {
   });
 }
 
+// The weave runs in both themes; what changes is how its points meet the page.
+// Dark: additive glow onto near-black. Light: deep inks alpha-blended over
+// near-white, with the bloom cascade off (on a bright field it would smear the
+// whole screen white) and the vignette flattened.
+const LOOM_CLEAR_DARK = 0x03040a;
+const LOOM_CLEAR_LIGHT = 0xeef1fa;
+const SNAPSHOT_BG_DARK = "#05060f";
+const SNAPSHOT_BG_LIGHT = "#f2f4fc";
+
+function isLightTheme() {
+  return document.documentElement.getAttribute("data-theme") === "light";
+}
+
 function screenToWorld(ndcX, ndcY, camera, distance) {
   const vec = new THREE.Vector3(ndcX, ndcY, 0.5).unproject(camera);
   const dir = vec.sub(camera.position).normalize();
@@ -180,6 +193,7 @@ async function initLoomOverlay() {
       uAttractor1Strength: { value: 0 },
       uAttractor2: { value: new THREE.Vector3(0, 0, -99999) },
       uAttractor2Strength: { value: 0 },
+      uLight: { value: 0 },
     },
   });
   const latticePoints = new THREE.Points(latticeGeometry, latticeMaterial);
@@ -259,6 +273,7 @@ async function initLoomOverlay() {
           texturePosition: { value: null },
           uSize: { value: cfg.particleSize },
           uPixelRatio: { value: renderer.getPixelRatio() },
+          uLight: { value: 0 },
         },
       });
 
@@ -291,6 +306,7 @@ async function initLoomOverlay() {
         uHasTexture: { value: 0 },
         uHoverT: { value: 0 },
         uBaseAlpha: { value: 0 },
+        uLight: { value: 0 },
       },
     });
     const mesh = new THREE.Mesh(panelGeometry, material);
@@ -338,6 +354,7 @@ async function initLoomOverlay() {
         uHasTexture: { value: 0 },
         uHoverT: { value: 0 },
         uBaseAlpha: { value: 0.16 },
+        uLight: { value: 0 },
       },
     });
     const mesh = new THREE.Mesh(geometry, material);
@@ -382,6 +399,48 @@ async function initLoomOverlay() {
     composer.addPass(postPass);
   }
 
+  // ---------- Theme ----------
+  let snapshotBg = SNAPSHOT_BG_DARK;
+  // Tracked separately from bloomPass.enabled: light mode turns bloom off too,
+  // and a theme change back to dark must not resurrect what the quality
+  // adapter dropped for performance.
+  let bloomDroppedForPerf = false;
+
+  function applyLoomTheme() {
+    const light = isLightTheme();
+
+    renderer.setClearColor(light ? LOOM_CLEAR_LIGHT : LOOM_CLEAR_DARK, 1);
+    scene.fog.color.setHex(light ? LOOM_CLEAR_LIGHT : LOOM_CLEAR_DARK);
+    snapshotBg = light ? SNAPSHOT_BG_LIGHT : SNAPSHOT_BG_DARK;
+
+    // Additive points vanish against white, so light mode alpha-blends them.
+    const blending = light ? THREE.NormalBlending : THREE.AdditiveBlending;
+    [latticeMaterial, particlePoints && particlePoints.material].forEach((mat) => {
+      if (!mat) return;
+      mat.blending = blending;
+      mat.uniforms.uLight.value = light ? 1 : 0;
+      mat.needsUpdate = true;
+    });
+
+    // Panels keep their blending — they are textured page snapshots, not glow.
+    // The flag only tells the untextured nav ghosts to draw nothing.
+    panelMeshes.forEach((mesh) => {
+      mesh.material.uniforms.uLight.value = light ? 1 : 0;
+    });
+    ghostMeshes.forEach((mesh) => {
+      mesh.material.uniforms.uLight.value = light ? 1 : 0;
+    });
+
+    // Bloom keys off luminance: on a near-white field every pixel clears the
+    // threshold and the cascade washes the page out.
+    if (bloomPass) bloomPass.enabled = !light && !bloomDroppedForPerf;
+    // The vignette multiplies toward black — fine over near-black, muddy grey
+    // in the corners of a white page.
+    if (postPass) postPass.uniforms.uVignette.value = light ? 0 : 1.15;
+  }
+
+  applyLoomTheme();
+
   // ---------- html2canvas (dynamic import; lazy DOM->texture snapshots) ----------
   let html2canvas = null;
   try {
@@ -395,7 +454,7 @@ async function initLoomOverlay() {
     if (!html2canvas || !el) return null;
     try {
       const canvasEl = await html2canvas(el, {
-        backgroundColor: "#05060f",
+        backgroundColor: snapshotBg,
         scale: TIER === "full" ? Math.min(window.devicePixelRatio || 1, 1.5) : 1,
         useCORS: true,
         logging: false,
@@ -468,6 +527,13 @@ async function initLoomOverlay() {
       }, 400);
     });
   }
+
+  // Repoint the scene at the new palette, then re-shoot the panels: their
+  // textures are snapshots of the page as it looked under the old one.
+  document.addEventListener("themechange", () => {
+    applyLoomTheme();
+    setTimeout(() => primeSnapshots(), 450);
+  });
 
   // ---------- State ----------
   const state = {
@@ -755,6 +821,7 @@ async function initLoomOverlay() {
     if (avg <= ADAPT_SLOW_FRAME_SECONDS) return;
     adaptStage++;
     if (adaptStage === 1) {
+      bloomDroppedForPerf = true;
       if (bloomPass) bloomPass.enabled = false;
       renderer.setPixelRatio(1);
       latticeMaterial.uniforms.uPixelRatio.value = 1;

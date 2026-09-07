@@ -1,7 +1,13 @@
-/* ============ Tokens ============ */
+/* ============ Tokens ============
+   Every themeable value lives here. The dark set on :root is the original
+   design; :root[data-theme="light"] below re-points the same names, so no
+   component rule needs to know which theme is active. ============ */
 :root{
+  color-scheme: dark;
+
   --bg: #060714;
   --bg-alt: #0a0c1e;
+  --body-bg: radial-gradient(ellipse 120% 80% at 50% -10%, #131538 0%, var(--bg) 55%);
   --ink: #eef0fb;
   --ink-dim: #a7acc9;
   --ink-faint: #6d7292;
@@ -9,6 +15,11 @@
   --cyan: #5eead4;
   --purple: #a78bfa;
   --green: #4ade80;
+  /* text/glyph color that sits on top of an accent gradient fill */
+  --accent-ink: #060714;
+
+  --selection-bg: var(--purple);
+  --selection-ink: #0a0a12;
 
   --glass-bg: rgba(255,255,255,0.04);
   --glass-bg-strong: rgba(255,255,255,0.06);
@@ -16,6 +27,37 @@
   --glass-highlight: rgba(255,255,255,0.5);
   --glass-rim: rgba(255,255,255,0.16);
   --glass-shadow: 0 24px 60px -28px rgba(0,0,0,0.7);
+  --glass-inner: rgba(255,255,255,0.03);
+  --surface-grad: linear-gradient(155deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.02) 30%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.02) 100%);
+  --glass-spec: linear-gradient(115deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 22%, rgba(255,255,255,0) 45%, rgba(255,255,255,0) 72%, rgba(255,255,255,0.08) 100%);
+  --glass-spec-blend: overlay;
+  --glass-spec-opacity: .85;
+
+  --nav-bg: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01)), rgba(6,7,20,0.5);
+  --nav-rim: inset 0 -1px 0 rgba(255,255,255,0.04);
+  --nav-panel-bg: rgba(6,7,20,0.96);
+
+  --pill-grad: linear-gradient(155deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+  --pill-shadow: inset 0 1px 1px var(--glass-highlight), 0 8px 20px -14px rgba(0,0,0,0.6);
+  --btn-grad: linear-gradient(155deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02) 60%);
+  --btn-spec: linear-gradient(115deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 40%);
+
+  --tile-grad: linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.01));
+  --tile-rim-hover: rgba(255,255,255,0.24);
+  --plate-grad: linear-gradient(160deg, rgba(255,255,255,0.95), rgba(210,215,235,0.75));
+  --plate-rim: transparent;
+  --plate-shadow: inset 0 1.5px 2px rgba(255,255,255,0.9), inset 0 -6px 10px -4px rgba(160,170,210,0.5), 0 10px 24px -12px rgba(0,0,0,0.7);
+
+  --row-hover: rgba(255,255,255,0.05);
+  --hairline: rgba(255,255,255,0.05);
+  --hairline-soft: rgba(255,255,255,0.06);
+
+  /* project cover artwork stays dark in both themes — it reads as an image
+     tile, and its white title/link glyphs stay legible either way */
+  --cover-base: #0a0c1e;
+  --loom-bg: #03040a;
+  --poly-opacity: .16;
+  --particle-rgb: 220, 225, 255;
 
   --radius-lg: 24px;
   --radius-md: 16px;
@@ -28,6 +70,69 @@
   --ease: cubic-bezier(.22,1,.36,1);
 }
 
+/* ---------------- Light theme ---------------- */
+:root[data-theme="light"]{
+  color-scheme: light;
+
+  --bg: #f4f5fb;
+  --bg-alt: #e7ebf8;
+  --body-bg: radial-gradient(ellipse 120% 80% at 50% -10%, #e3e8ff 0%, #f5f6fb 55%);
+  --ink: #111427;
+  --ink-dim: #4c5270;
+  --ink-faint: #767c96;
+
+  /* deeper accents so the same hues keep contrast on a white ground */
+  --cyan: #0d9488;
+  --purple: #6d3ff0;
+  --green: #15a34a;
+  --accent-ink: #ffffff;
+
+  --selection-ink: #ffffff;
+
+  --glass-bg: rgba(255,255,255,0.58);
+  --glass-bg-strong: rgba(255,255,255,0.72);
+  --glass-border: rgba(17,20,39,0.08);
+  --glass-highlight: rgba(255,255,255,0.9);
+  --glass-rim: rgba(17,20,39,0.10);
+  --glass-shadow: 0 24px 50px -30px rgba(28,36,90,0.40);
+  --glass-inner: rgba(17,20,39,0.02);
+  --surface-grad: linear-gradient(155deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.55) 40%, rgba(255,255,255,0.78) 100%);
+  --glass-spec: linear-gradient(115deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.25) 22%, rgba(255,255,255,0) 48%, rgba(255,255,255,0) 78%, rgba(255,255,255,0.45) 100%);
+  --glass-spec-blend: soft-light;
+  --glass-spec-opacity: .7;
+
+  --nav-bg: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.62)), rgba(244,245,251,0.7);
+  --nav-rim: inset 0 -1px 0 rgba(17,20,39,0.05);
+  --nav-panel-bg: rgba(247,248,253,0.97);
+
+  --pill-grad: linear-gradient(155deg, rgba(255,255,255,0.95), rgba(255,255,255,0.6));
+  --pill-shadow: inset 0 1px 1px rgba(255,255,255,0.95), 0 6px 16px -12px rgba(28,36,90,0.55);
+  --btn-grad: linear-gradient(155deg, rgba(255,255,255,0.95), rgba(255,255,255,0.62) 60%);
+  --btn-spec: linear-gradient(115deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 40%);
+
+  --tile-grad: linear-gradient(160deg, rgba(255,255,255,0.92), rgba(255,255,255,0.58));
+  --tile-rim-hover: rgba(17,20,39,0.18);
+  --plate-grad: linear-gradient(160deg, #ffffff, #eef1fa);
+  --plate-rim: rgba(17,20,39,0.08);
+  --plate-shadow: inset 0 1.5px 2px rgba(255,255,255,0.95), inset 0 -6px 10px -6px rgba(150,160,205,0.4), 0 8px 18px -12px rgba(28,36,90,0.5);
+
+  --row-hover: rgba(17,20,39,0.05);
+  --hairline: rgba(17,20,39,0.08);
+  --hairline-soft: rgba(17,20,39,0.10);
+
+  --cover-base: #12162e;
+  --loom-bg: #eef1fa;
+  --poly-opacity: .3;
+  --particle-rgb: 88, 96, 150;
+}
+
+/* Cross-fade colors only while a theme swap is in flight, so the rest of the
+   time we are not paying for transitions on every element on the page. */
+html.theme-switching *:not([data-reveal]){
+  transition: background-color .3s var(--ease), background-image .3s var(--ease),
+              color .3s var(--ease), border-color .3s var(--ease) !important;
+}
+
 *, *::before, *::after{ box-sizing: border-box; }
 
 html{
@@ -37,7 +142,7 @@ html{
 
 body{
   margin:0;
-  background: radial-gradient(ellipse 120% 80% at 50% -10%, #131538 0%, var(--bg) 55%) fixed;
+  background: var(--body-bg) fixed;
   color: var(--ink);
   font-family: var(--font-body);
   line-height: 1.6;
@@ -45,7 +150,7 @@ body{
   -webkit-font-smoothing: antialiased;
 }
 
-::selection{ background: var(--purple); color: #0a0a12; }
+::selection{ background: var(--selection-bg); color: var(--selection-ink); }
 
 a{ color: inherit; text-decoration: none; }
 ul{ margin:0; padding:0; list-style: none; }
@@ -75,20 +180,27 @@ img{ max-width:100%; display:block; }
   z-index: 0;
   pointer-events: none;
   display: block;
-  background: #03040a;
+  /* Stays transparent until the weave boots. An opaque background here would
+     paint over the 2D particle canvas below it on any browser without WebGL,
+     leaving those visitors a flat empty field instead of the fallback. Once
+     WebGL is live the context paints its own clear color over this. */
+  background: transparent;
 }
 
 /* Only take over from the 2D canvas once the WebGL overlay has actually
    booted successfully — keeps the original background as a safe fallback. */
 html.loom-active #particle-canvas{ display: none; }
 html.loom-active body{
-  background: #03040a;
+  background: var(--loom-bg);
 }
-html.loom-active .glass{
+/* The weave sits behind glass on a near-black field in dark mode, so the
+   panels thin out to let it through. Light mode keeps its normal glass —
+   translucent white over a near-white weave would leave nothing to read. */
+html.loom-active:not([data-theme="light"]) .glass{
   --glass-bg: rgba(255,255,255,0.03);
   --glass-bg-strong: rgba(255,255,255,0.045);
 }
-html.loom-active .navbar{
+html.loom-active:not([data-theme="light"]) .navbar{
   background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)), rgba(3,4,10,0.35);
 }
 
@@ -109,7 +221,7 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   isolation: isolate;
   overflow: hidden;
   background:
-    linear-gradient(155deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.02) 30%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.02) 100%),
+    var(--surface-grad),
     var(--glass-bg);
   backdrop-filter: blur(26px) saturate(180%) brightness(1.06);
   -webkit-backdrop-filter: blur(26px) saturate(180%) brightness(1.06);
@@ -117,7 +229,7 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   border: 1px solid var(--glass-rim);
   box-shadow:
     inset 0 1px 1px var(--glass-highlight),
-    inset 0 -1px 14px rgba(255,255,255,0.03),
+    inset 0 -1px 14px var(--glass-inner),
     var(--glass-shadow);
   transition: box-shadow .4s var(--ease), transform .4s var(--ease), border-color .4s var(--ease);
 }
@@ -130,9 +242,9 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   z-index: 0;
   pointer-events: none;
   border-radius: inherit;
-  background: linear-gradient(115deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 22%, rgba(255,255,255,0) 45%, rgba(255,255,255,0) 72%, rgba(255,255,255,0.08) 100%);
-  mix-blend-mode: overlay;
-  opacity: .85;
+  background: var(--glass-spec);
+  mix-blend-mode: var(--glass-spec-blend);
+  opacity: var(--glass-spec-opacity);
 }
 
 .glass > *{ position: relative; z-index: 1; }
@@ -189,9 +301,9 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   z-index: 50;
   backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
   -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.05);
-  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01)), rgba(6,7,20,0.5);
+  background: var(--nav-bg);
   border-bottom: 1px solid var(--glass-rim);
-  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.04);
+  box-shadow: var(--nav-rim);
   transition: background .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
 }
 
@@ -233,9 +345,10 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
 
 .navbar__actions{ display:flex; align-items:center; gap: 16px; }
 
-.lang-toggle{
+.lang-toggle,
+.theme-toggle{
   display:flex; align-items:center; gap:6px;
-  background: linear-gradient(155deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+  background: var(--pill-grad);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--glass-rim);
@@ -245,11 +358,24 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   font-family: var(--font-body);
   font-size: 12.5px;
   color: var(--ink-faint);
-  box-shadow: inset 0 1px 1px var(--glass-highlight), 0 8px 20px -14px rgba(0,0,0,0.6);
+  box-shadow: var(--pill-shadow);
 }
-.lang-toggle__opt{ padding: 2px 4px; border-radius: 6px; transition: color .2s, background .2s; }
-.lang-toggle__opt.is-active{ color: var(--bg); background: linear-gradient(90deg, var(--cyan), var(--green)); font-weight:600; }
-.lang-toggle__sep{ opacity: .4; }
+.lang-toggle__opt,
+.theme-toggle__opt{ padding: 2px 4px; border-radius: 6px; transition: color .2s, background .2s; }
+.lang-toggle__opt.is-active,
+.theme-toggle__opt.is-active{ color: var(--accent-ink); background: linear-gradient(90deg, var(--cyan), var(--green)); font-weight:600; }
+.lang-toggle__sep,
+.theme-toggle__sep{ opacity: .4; }
+
+/* Theme switch — same pill shape as EN/FR so the two read as one control
+   group, with icons instead of labels to keep the navbar from crowding. */
+.theme-toggle{ padding: 6px 10px; }
+.theme-toggle__opt{
+  display:flex; align-items:center; justify-content:center;
+  padding: 3px 5px;
+  line-height: 0;
+}
+.theme-toggle__opt svg{ width: 14px; height: 14px; display:block; }
 
 .hamburger{
   display:none;
@@ -308,11 +434,11 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   border-radius: var(--radius-pill);
   font-weight: 700;
   font-size: 15px;
-  background: linear-gradient(155deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02) 60%);
+  background: var(--btn-grad);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   isolation: isolate;
-  box-shadow: inset 0 1px 1px var(--glass-highlight), inset 0 -1px 10px rgba(255,255,255,0.03);
+  box-shadow: inset 0 1px 1px var(--glass-highlight), inset 0 -1px 10px var(--glass-inner);
   transition: transform .3s var(--ease), box-shadow .3s var(--ease);
 }
 .btn-pill::before{
@@ -330,15 +456,15 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   content:"";
   position:absolute; inset:0;
   border-radius: inherit;
-  background: linear-gradient(115deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 40%);
-  mix-blend-mode: overlay;
+  background: var(--btn-spec);
+  mix-blend-mode: var(--glass-spec-blend);
   pointer-events: none;
 }
 .btn-pill span{ position: relative; z-index: 2; }
 .btn-pill:hover{
   transform: translateY(-3px);
   box-shadow:
-    inset 0 1px 1px var(--glass-highlight), inset 0 -1px 10px rgba(255,255,255,0.03),
+    inset 0 1px 1px var(--glass-highlight), inset 0 -1px 10px var(--glass-inner),
     0 0 32px -6px var(--purple), 0 0 24px -8px var(--cyan);
 }
 
@@ -361,7 +487,7 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
 .poly{
   position: absolute;
   width: 220px; height: 220px;
-  opacity: .16;
+  opacity: var(--poly-opacity);
   filter: drop-shadow(0 0 24px currentColor);
   animation: float-rotate 16s ease-in-out infinite;
 }
@@ -390,7 +516,7 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   gap: 12px;
   padding: 22px 12px;
   border-radius: var(--radius-md);
-  background: linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.01));
+  background: var(--tile-grad);
   backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
   border: 1px solid var(--glass-rim);
@@ -400,18 +526,16 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
 }
 .tech-item:hover{
   transform: translateY(-8px) scale(1.04);
-  border-color: rgba(255,255,255,0.24);
+  border-color: var(--tile-rim-hover);
   box-shadow: inset 0 1px 1px var(--glass-highlight), 0 18px 40px -18px var(--purple);
 }
 .tech-item__icon{
   width: 60px; height: 60px;
   border-radius: 18px;
   display:flex; align-items:center; justify-content:center;
-  background: linear-gradient(160deg, rgba(255,255,255,0.95), rgba(210,215,235,0.75));
-  box-shadow:
-    inset 0 1.5px 2px rgba(255,255,255,0.9),
-    inset 0 -6px 10px -4px rgba(160,170,210,0.5),
-    0 10px 24px -12px rgba(0,0,0,0.7);
+  background: var(--plate-grad);
+  border: 1px solid var(--plate-rim);
+  box-shadow: var(--plate-shadow);
 }
 .tech-item img{ width: 32px; height: 32px; object-fit: contain; }
 .tech-item > span:last-child{ font-size: 12.5px; color: var(--ink-dim); text-align:center; }
@@ -452,7 +576,7 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   transform: translateY(-4px);
   box-shadow:
     inset 0 1px 1px var(--glass-highlight),
-    inset 0 -1px 14px rgba(255,255,255,0.03),
+    inset 0 -1px 14px var(--glass-inner),
     0 20px 50px -24px var(--cyan);
 }
 .timeline__date{
@@ -495,7 +619,7 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   transform: translateY(-10px);
   box-shadow:
     inset 0 1px 1px var(--glass-highlight),
-    inset 0 -1px 14px rgba(255,255,255,0.03),
+    inset 0 -1px 14px var(--glass-inner),
     0 30px 60px -28px var(--purple);
 }
 
@@ -559,13 +683,13 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   transition: background .25s var(--ease), transform .25s var(--ease);
   font-size: 14.5px;
 }
-.contact__row:hover{ background: rgba(255,255,255,0.05); transform: translateX(4px); }
+.contact__row:hover{ background: var(--row-hover); transform: translateX(4px); }
 .contact__icon{
   width: 34px; height:34px;
   border-radius: 50%;
   display:flex; align-items:center; justify-content:center;
   background: linear-gradient(135deg, var(--cyan), var(--purple));
-  color: var(--bg);
+  color: var(--accent-ink);
   font-size: 14px;
   flex-shrink:0;
   box-shadow: inset 0 1.5px 2px rgba(255,255,255,0.65), inset 0 -4px 8px -2px rgba(0,0,0,0.2);
@@ -577,14 +701,14 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   padding: 36px 0 46px;
   color: var(--ink-faint);
   font-size: 13px;
-  border-top: 1px solid rgba(255,255,255,0.05);
+  border-top: 1px solid var(--hairline);
 }
 
 .footer__build{
   max-width: 640px;
   margin: 0 auto 28px;
   padding-bottom: 28px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid var(--hairline-soft);
 }
 
 .footer__badges{
@@ -598,13 +722,14 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   width: 26px; height: 26px;
   padding: 6px;
   border-radius: 10px;
-  background: linear-gradient(160deg, rgba(255,255,255,0.92), rgba(210,215,235,0.7));
-  box-shadow: inset 0 1px 2px rgba(255,255,255,0.85), inset 0 -4px 8px -3px rgba(160,170,210,0.5);
+  background: var(--plate-grad);
+  border: 1px solid var(--plate-rim);
+  box-shadow: var(--plate-shadow);
   transition: transform .3s var(--ease), box-shadow .3s var(--ease);
 }
 .footer__badges img:hover{
   transform: translateY(-4px) scale(1.06);
-  box-shadow: inset 0 1px 2px rgba(255,255,255,0.85), inset 0 -4px 8px -3px rgba(160,170,210,0.5), 0 10px 22px -10px var(--cyan);
+  box-shadow: var(--plate-shadow), 0 10px 22px -10px var(--cyan);
 }
 
 .footer__build-line{
@@ -626,6 +751,17 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   .contact__grid{ grid-template-columns: 1fr; }
 }
 
+/* Below ~1000px the nav row gets tight — most of all in French, where the
+   labels are longer — so the theme pill collapses to just the current mode's
+   icon. EN/FR needs both of its labels to be readable; this one doesn't. */
+@media (max-width: 1000px){
+  .nav-links{ gap: 18px; }
+  .navbar__actions{ gap: 10px; }
+  .theme-toggle{ padding: 6px 8px; }
+  .theme-toggle__sep,
+  .theme-toggle__opt:not(.is-active){ display: none; }
+}
+
 @media (max-width: 760px){
   .nav-links{
     position: fixed;
@@ -634,16 +770,33 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
     align-items: flex-start;
     gap: 4px;
     padding: 18px 6vw 26px;
-    background: rgba(6,7,20,0.96);
+    background: var(--nav-panel-bg);
     backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid var(--hairline-soft);
     transform: translateY(-130%);
     transition: transform .35s var(--ease);
   }
+  /* Two pills plus the hamburger leave the brand very little room on a phone. */
+  .navbar__inner{ gap: 12px; }
+  .navbar__actions{ gap: 8px; }
+  .brand{ gap: 9px; }
+  .brand__name{ font-size: 15px; }
+  .lang-toggle{ padding: 6px 9px; }
   .nav-links.is-open{ transform: translateY(0); }
   .nav-links a{ padding: 12px 0; width:100%; }
   .hamburger{ display:flex; }
   .project-grid{ grid-template-columns: 1fr; }
   .timeline{ padding-left: 30px; }
   .timeline__node{ left: -30px; }
+}
+
+@media (max-width: 430px){
+  .brand__mark{ width: 34px; height: 34px; }
+  .brand__name{ font-size: 14px; }
+}
+
+/* Below this the full name can't share a line with both pills and the
+   hamburger — the avatar carries the brand on its own. */
+@media (max-width: 380px){
+  .brand__name{ display: none; }
 }

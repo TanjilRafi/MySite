@@ -9,10 +9,11 @@ and a resume in a fast, dependency-free static site.
 
 ## Overview
 
-A single-page, dark-mode portfolio with a space-themed aesthetic — glassmorphism
-cards, animated gradient borders, a canvas particle background, and scroll-triggered
-reveal animations. Fully bilingual (English/French) via a client-side toggle, with no
-build step: open `index.html` and it runs.
+A single-page portfolio with a space-themed aesthetic — glassmorphism cards, animated
+gradient borders, a canvas particle background, and scroll-triggered reveal
+animations. Dark by default with a light mode toggle, and fully bilingual
+(English/French) via a client-side toggle, with no build step: open `index.html` and
+it runs.
 
 ## Sections
 
@@ -58,9 +59,17 @@ python3 -m http.server 8000
 
 ## Notes
 
-- Language preference persists via `localStorage`.
+- Language and theme preferences persist via `localStorage`; the theme is applied by
+  a small inline script in `<head>` so there is no flash of the wrong palette.
+- Every themeable color is a CSS custom property on `:root`; the light palette
+  re-points the same names under `:root[data-theme="light"]`.
+- The Three.js "Interstitial Weave" background is additive glow on a near-black
+  field, so it is dark-mode only — light mode hides it, suspends its render loop,
+  and hands the background back to the 2D particle canvas.
 - Scroll animations respect `prefers-reduced-motion`.
-- Layout is responsive down to mobile, with a collapsible nav below 760px.
+- Layout is responsive down to mobile, with a collapsible nav below 760px. The theme
+  pill collapses to the current mode's icon below 1000px to keep the nav row on one
+  line.
 
 ## License
 

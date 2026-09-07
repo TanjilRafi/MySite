@@ -73,6 +73,9 @@ uniform vec3 uAttractor1;
 uniform float uAttractor1Strength;
 uniform vec3 uAttractor2;
 uniform float uAttractor2Strength;
+// 0 = dark theme (bright points added onto near-black),
+// 1 = light theme (deep points laid over near-white).
+uniform float uLight;
 
 varying vec3 vColor;
 varying float vAlpha;
@@ -102,13 +105,38 @@ void main(){
 
   vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
   float viewDist = max(-mvPosition.z, 1.0);
-  gl_PointSize = clamp(uSize * uPixelRatio * (320.0 / viewDist), 0.0, 40.0);
+  // Dark mode lets distant points fall to sub-pixel: additive blending and the
+  // bloom cascade still carry them. Light mode has neither, so a sub-pixel
+  // point antialiases into nothing — hold a floor so the deep field survives.
+  float minSize = mix(0.0, 1.9, uLight);
+  gl_PointSize = clamp(uSize * uPixelRatio * (320.0 / viewDist), minSize, 40.0);
   gl_Position = projectionMatrix * mvPosition;
 
   float depthMix = clamp((n1 + 1.0) / 2.0, 0.0, 1.0);
-  vColor = mix(vec3(0.14, 0.32, 0.92), vec3(0.58, 0.38, 0.98), depthMix);
-  vColor = mix(vColor, vec3(0.55, 0.95, 0.92), max(influence1, influence2));
-  vAlpha = 0.28 + 0.45 * max(influence1, influence2) + 0.14 * sin(uTime * 1.6 + pos.x * 0.01);
+  float influence = max(influence1, influence2);
+
+  // Same three-stop ramp in both themes — near hue, far hue, attractor hue —
+  // but light mode needs deep, saturated inks instead of neon, since the
+  // points are alpha-blended over white rather than added onto black.
+  vec3 near = mix(vec3(0.14, 0.32, 0.92), vec3(0.11, 0.20, 0.52), uLight);
+  vec3 far  = mix(vec3(0.58, 0.38, 0.98), vec3(0.36, 0.18, 0.68), uLight);
+  vec3 hot  = mix(vec3(0.55, 0.95, 0.92), vec3(0.02, 0.42, 0.40), uLight);
+
+  vColor = mix(near, far, depthMix);
+  vColor = mix(vColor, hot, influence);
+
+  float pulse = sin(uTime * 1.6 + pos.x * 0.01);
+  float darkAlpha  = 0.28 + 0.45 * influence + 0.14 * pulse;
+  // Additive points compound where they overlap and bloom spreads them, so
+  // dark mode reads dense at low alpha. Alpha-blended points do neither —
+  // each one is only as visible as its own coverage, hence the higher floor.
+  float lightAlpha = 0.42 + 0.40 * influence + 0.12 * pulse;
+
+  // Holding a minimum point size costs light mode its main depth cue, since
+  // distant points stop shrinking. Fade them instead, so the field still
+  // recedes rather than reading as flat speckle.
+  float depthFade = mix(1.0, 0.3 + 0.7 * smoothstep(4600.0, 600.0, viewDist), uLight);
+  vAlpha = mix(darkAlpha, lightAlpha, uLight) * depthFade;
 }
 `;
 
@@ -127,6 +155,7 @@ export const gpgpuParticleVertexShader = /* glsl */ `
 uniform sampler2D texturePosition;
 uniform float uSize;
 uniform float uPixelRatio;
+uniform float uLight;
 attribute vec2 reference;
 varying float vSpeed;
 
@@ -134,20 +163,23 @@ void main(){
   vec4 texPos = texture2D(texturePosition, reference);
   vec4 mvPosition = modelViewMatrix * vec4(texPos.xyz, 1.0);
   float viewDist = max(-mvPosition.z, 1.0);
-  gl_PointSize = clamp(uSize * uPixelRatio * (280.0 / viewDist), 0.0, 34.0);
+  gl_PointSize = clamp(uSize * uPixelRatio * (280.0 / viewDist), mix(0.0, 1.9, uLight), 34.0);
   gl_Position = projectionMatrix * mvPosition;
   vSpeed = texPos.w;
 }
 `;
 
 export const gpgpuParticleFragmentShader = /* glsl */ `
+uniform float uLight;
 varying float vSpeed;
 void main(){
   float d = length(gl_PointCoord - vec2(0.5));
   if (d > 0.5) discard;
   float glow = smoothstep(0.5, 0.0, d);
-  vec3 color = mix(vec3(0.36, 0.62, 0.98), vec3(0.72, 0.5, 0.99), clamp(vSpeed / 30.0, 0.0, 1.0));
-  gl_FragColor = vec4(color, glow * 0.75);
+  float speed = clamp(vSpeed / 30.0, 0.0, 1.0);
+  vec3 slow = mix(vec3(0.36, 0.62, 0.98), vec3(0.12, 0.33, 0.72), uLight);
+  vec3 fast = mix(vec3(0.72, 0.50, 0.99), vec3(0.40, 0.20, 0.76), uLight);
+  gl_FragColor = vec4(mix(slow, fast, speed), glow * mix(0.75, 0.85, uLight));
 }
 `;
 
@@ -167,6 +199,7 @@ uniform vec3 uGlowColor;
 uniform float uHasTexture;
 uniform float uHoverT;
 uniform float uBaseAlpha;
+uniform float uLight;
 varying vec2 vUv;
 
 float hash(vec2 p){
@@ -174,6 +207,12 @@ float hash(vec2 p){
 }
 
 void main(){
+  // An untextured panel falls back to a flat navy fill. That disappears into a
+  // near-black page but reads as a grey smudge on a light one, and the nav
+  // ghosts are permanently untextured — they exist to catch hover raycasts,
+  // not to be seen. Light mode draws nothing and lets them stay hit-targets.
+  if (uHasTexture < 0.5 && uLight > 0.5) discard;
+
   vec4 tex = uHasTexture > 0.5 ? texture2D(map, vUv) : vec4(0.06, 0.07, 0.16, 1.0);
   float n = hash(floor(vUv * 140.0));
   float threshold = uWeave * 1.2 - 0.08;

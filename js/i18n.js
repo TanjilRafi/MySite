@@ -7,6 +7,9 @@ const I18N = {
     "nav.projects": "Projects",
     "nav.contact": "Contact",
 
+    "theme.toLight": "Switch to light mode",
+    "theme.toDark": "Switch to dark mode",
+
     "hero.eyebrow": "INTRODUCTION",
     "hero.title": "Overview.",
     "hero.body": "Hey, I'm Tanjil — a Computing Science student at the University of Alberta with a deep passion for full-stack software engineering. I care about writing code that's not just correct, but optimized and refactored to be lean, readable, and built to last. I spend a lot of time in the weeds of Python asynchronous execution, caching strategies, and robust error handling — the kind of details that keep systems fast and dependable under real load. I'm always looking for the next hard problem to build my way through.",
@@ -50,6 +53,9 @@ const I18N = {
     "nav.experience": "Expérience",
     "nav.projects": "Projets",
     "nav.contact": "Contact",
+
+    "theme.toLight": "Passer en mode clair",
+    "theme.toDark": "Passer en mode sombre",
 
     "hero.eyebrow": "INTRODUCTION",
     "hero.title": "Aperçu.",

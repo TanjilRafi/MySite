@@ -24,12 +24,28 @@
     }));
   }
 
+  function particleRGB() {
+    const v = getComputedStyle(document.documentElement).getPropertyValue("--particle-rgb").trim();
+    return v || "220, 225, 255";
+  }
+  let particleColor = particleRGB();
+
+  // This canvas is the fallback background for browsers where the WebGL weave
+  // never booted; once it has, CSS hides this one in either theme.
+  function particlesHidden() {
+    return document.documentElement.classList.contains("loom-active");
+  }
+
+  let tickRunning = false;
   function tick() {
-    // Once the WebGL overlay takes over, this canvas is hidden via CSS
-    // (html.loom-active #particle-canvas{display:none}) but was still
-    // burning a full requestAnimationFrame loop drawing into nothing.
+    // Once the WebGL overlay takes over, this canvas is hidden via CSS but was
+    // still burning a full requestAnimationFrame loop drawing into nothing.
     // Stop scheduling further frames once that happens.
-    if (document.documentElement.classList.contains("loom-active")) return;
+    if (particlesHidden()) {
+      tickRunning = false;
+      return;
+    }
+    tickRunning = true;
     ctx.clearRect(0, 0, W, H);
     for (const p of particles) {
       p.x += p.vx;
@@ -41,17 +57,17 @@
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(220, 225, 255, ${p.a})`;
+      ctx.fillStyle = `rgba(${particleColor}, ${p.a})`;
       ctx.fill();
     }
-    requestAnimationFrame(tick);
+    if (!reduceMotion) requestAnimationFrame(tick);
+    else tickRunning = false;
   }
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   resize();
   initParticles();
-  if (!reduceMotion) requestAnimationFrame(tick);
-  else tick();
+  requestAnimationFrame(tick);
 
   let resizeTimer;
   window.addEventListener("resize", () => {
@@ -62,12 +78,69 @@
     }, 200);
   });
 
+  /* ================= Theme toggle ================= */
+  const themeToggle = document.getElementById("theme-toggle");
+  const themeMeta = document.getElementById("theme-color-meta");
+  const THEME_COLORS = { dark: "#060714", light: "#f4f5fb" };
+  // The inline <head> script has already applied any stored choice; read it
+  // back rather than re-deriving it, so the two can never disagree.
+  let currentTheme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+
+  // The button says what the *next* tap does, in whichever language is active.
+  function syncThemeLabel() {
+    const key = currentTheme === "light" ? "theme.toDark" : "theme.toLight";
+    const dict = I18N[currentLang] || I18N.en;
+    const label = dict[key] || I18N.en[key];
+    themeToggle.setAttribute("aria-label", label);
+    themeToggle.setAttribute("title", label);
+  }
+
+  function applyTheme(theme, { animate = false, persist = true } = {}) {
+    currentTheme = theme;
+    if (persist) {
+      try {
+        localStorage.setItem("theme", theme);
+      } catch (e) { /* storage blocked — the choice just won't persist */ }
+    }
+
+    if (animate) {
+      document.documentElement.classList.add("theme-switching");
+      clearTimeout(applyTheme._t);
+      applyTheme._t = setTimeout(
+        () => document.documentElement.classList.remove("theme-switching"),
+        340
+      );
+    }
+
+    if (theme === "light") document.documentElement.setAttribute("data-theme", "light");
+    else document.documentElement.removeAttribute("data-theme");
+
+    if (themeMeta) themeMeta.setAttribute("content", THEME_COLORS[theme]);
+
+    themeToggle.querySelectorAll(".theme-toggle__opt").forEach((opt) => {
+      opt.classList.toggle("is-active", opt.getAttribute("data-theme") === theme);
+    });
+    syncThemeLabel();
+
+    // Only matters on the no-WebGL fallback path, where this canvas is the
+    // background and its dots have to flip contrast with the page.
+    particleColor = particleRGB();
+    if (!particlesHidden() && !tickRunning) requestAnimationFrame(tick);
+
+    // Lets the WebGL overlay suspend/resume itself without importing anything.
+    document.dispatchEvent(new CustomEvent("themechange", { detail: { theme } }));
+  }
+
+  themeToggle.addEventListener("click", () => {
+    applyTheme(currentTheme === "light" ? "dark" : "light", { animate: true });
+  });
+
   /* ================= Navbar scroll state ================= */
   const navbar = document.getElementById("navbar");
-  const navbarRim = "inset 0 -1px 0 rgba(255,255,255,0.04)";
+  const navbarRim = "var(--nav-rim)";
   window.addEventListener("scroll", () => {
     navbar.style.boxShadow = window.scrollY > 12
-      ? `${navbarRim}, 0 12px 30px -20px rgba(0,0,0,0.6)`
+      ? `${navbarRim}, 0 12px 30px -20px rgba(0,0,0,0.35)`
       : navbarRim;
   });
 
@@ -100,6 +173,7 @@
       opt.classList.toggle("is-active", opt.getAttribute("data-lang") === lang);
     });
 
+    syncThemeLabel();
     renderProjects(lang);
   }
 
@@ -130,7 +204,7 @@
         .join(" ");
       return `
       <article class="glass glow-border project-card" data-reveal style="--reveal-delay:${(i % 6) * 90}ms">
-        <div class="project-card__cover" style="background: linear-gradient(150deg, var(--${p.accent}) -40%, #0a0c1e 70%)">
+        <div class="project-card__cover" style="background: linear-gradient(150deg, var(--${p.accent}) -40%, var(--cover-base) 70%)">
           <div class="project-card__links">
             <a href="${p.github}" target="_blank" rel="noopener" aria-label="GitHub repository for ${p.title}">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.34-1.28-1.7-1.28-1.7-1.04-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.64 1.59.24 2.77.12 3.06.74.8 1.19 1.83 1.19 3.09 0 4.43-2.7 5.4-5.27 5.69.42.36.78 1.08.78 2.17 0 1.57-.01 2.83-.01 3.22 0 .31.21.67.8.56A10.52 10.52 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/></svg>
@@ -173,6 +247,7 @@
   document.getElementById("year").textContent = new Date().getFullYear();
 
   /* ================= Init ================= */
+  applyTheme(currentTheme, { persist: false });
   renderTechStack();
   applyLang(currentLang);
   observeReveal();
