@@ -174,6 +174,7 @@
     });
 
     syncThemeLabel();
+    updateTechStackControls();
     renderProjects(lang);
   }
 
@@ -182,9 +183,51 @@
   });
 
   /* ================= Tech stack render ================= */
+  const techGrid = document.getElementById("tech-grid");
+  const techStackControls = document.getElementById("tech-stack-controls");
+  const techStackToggle = document.getElementById("tech-stack-toggle");
+  const techStackToggleLabel = document.getElementById("tech-stack-toggle-label");
+  let techStackExpanded = false;
+  let techStackHasOverflow = false;
+
+  function techStackText(key) {
+    const dict = I18N[currentLang] || I18N.en;
+    return dict[key] || I18N.en[key] || key;
+  }
+
+  function techStackInitialCount() {
+    const styles = getComputedStyle(techGrid);
+    const cardMinWidth = parseFloat(styles.getPropertyValue("--tech-card-min")) || 120;
+    const columnGap = parseFloat(styles.columnGap) || 26;
+    const columns = Math.max(1, Math.floor((techGrid.clientWidth + columnGap) / (cardMinWidth + columnGap)));
+    return columns * 2;
+  }
+
+  function updateTechStackControls() {
+    techStackControls.hidden = !techStackHasOverflow;
+    if (!techStackHasOverflow) return;
+
+    const label = techStackText(techStackExpanded ? "tech.showLess" : "tech.showMore");
+    techStackToggleLabel.textContent = label;
+    techStackToggle.setAttribute("aria-label", label);
+    techStackToggle.setAttribute("aria-expanded", String(techStackExpanded));
+  }
+
+  function updateTechStackVisibility() {
+    const initialCount = techStackInitialCount();
+    techStackHasOverflow = TECH_STACK.length > initialCount;
+    if (!techStackHasOverflow) techStackExpanded = false;
+
+    techGrid.querySelectorAll(".tech-item").forEach((item, index) => {
+      item.hidden = !techStackExpanded && index >= initialCount;
+    });
+
+    updateTechStackControls();
+    observeReveal();
+  }
+
   function renderTechStack() {
-    const grid = document.getElementById("tech-grid");
-    grid.innerHTML = TECH_STACK.map(
+    techGrid.innerHTML = TECH_STACK.map(
       (t, i) => `
       <div class="tech-item" data-reveal style="animation-delay:${(i % 6) * 0.35}s; --reveal-delay:${(i % 8) * 55}ms">
         <span class="tech-item__icon">
@@ -193,7 +236,19 @@
         <span>${t.name}</span>
       </div>`
     ).join("");
+    updateTechStackVisibility();
   }
+
+  techStackToggle.addEventListener("click", () => {
+    techStackExpanded = !techStackExpanded;
+    updateTechStackVisibility();
+  });
+
+  let techStackResizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(techStackResizeTimer);
+    techStackResizeTimer = setTimeout(updateTechStackVisibility, 100);
+  });
 
   /* ================= Projects render ================= */
   function renderProjects(lang) {

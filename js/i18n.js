@@ -18,6 +18,8 @@ const I18N = {
 
     "tech.eyebrow": "WHAT I KNOW",
     "tech.title": "Tech Stack.",
+    "tech.showMore": "Show more",
+    "tech.showLess": "Show less",
 
     "exp.eyebrow": "WHERE I'VE BEEN",
     "exp.title": "Experience.",
@@ -65,6 +67,8 @@ const I18N = {
 
     "tech.eyebrow": "CE QUE JE MAÎTRISE",
     "tech.title": "Compétences techniques.",
+    "tech.showMore": "Afficher plus",
+    "tech.showLess": "Afficher moins",
 
     "exp.eyebrow": "MON PARCOURS",
     "exp.title": "Expérience.",
