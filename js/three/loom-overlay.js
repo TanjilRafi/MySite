@@ -153,7 +153,8 @@ async function initLoomOverlay() {
   const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1, 9000);
   camera.position.set(0, -20, 60);
 
-  scene.add(new THREE.HemisphereLight(0x8a6bff, 0x0a0a18, 0.65));
+  const ambientLight = new THREE.HemisphereLight(0x8a6bff, 0x0a0a18, 0.65);
+  scene.add(ambientLight);
   const keyLight = new THREE.DirectionalLight(0x5eead4, 0.5);
   keyLight.position.set(200, 300, 200);
   scene.add(keyLight);
@@ -430,6 +431,14 @@ async function initLoomOverlay() {
     ghostMeshes.forEach((mesh) => {
       mesh.material.uniforms.uLight.value = light ? 1 : 0;
     });
+
+    // The Loom Master is lit for a black room: a violet sky over a near-black
+    // ground, which leaves its underside unlit. That is what makes it read as
+    // a heavy black silhouette over a white page rather than as glass.
+    ambientLight.groundColor.setHex(light ? 0xdfe5f6 : 0x0a0a18);
+    ambientLight.intensity = light ? 1.15 : 0.65;
+    keyLight.intensity = light ? 0.85 : 0.5;
+    loomMaster.userData.setTheme(light);
 
     // Bloom keys off luminance: on a near-white field every pixel clears the
     // threshold and the cascade washes the page out.

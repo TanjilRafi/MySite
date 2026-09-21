@@ -24,7 +24,7 @@ const PROJECTS = [
     },
     tags: ["React", "TypeScript", "Express", "Supabase"],
     github: "https://github.com/TanjilRafi",
-    live: null
+    live: "https://beef-stock.vercel.app"
   },
   {
     id: "specaqi",
@@ -36,7 +36,7 @@ const PROJECTS = [
     },
     tags: ["Next.js", "React", "Tailwind", "Leaflet"],
     github: "https://github.com/TanjilRafi",
-    live: null
+    live: "https://spec-aqi.vercel.app"
   },
   {
     id: "darkorchid",
@@ -61,6 +61,18 @@ const PROJECTS = [
     tags: ["Python", "AI", "Algorithms"],
     github: "https://github.com/TanjilRafi",
     live: null
+  },
+  {
+    id: "reminders",
+    title: "Reminders",
+    accent: "green",
+    desc: {
+      en: "A focus-friendly task and reminder dashboard for creating reminders, organizing them into lists, tracking scheduled and flagged tasks, and launching focus sessions.",
+      fr: "Un tableau de bord de tâches et de rappels pensé pour la concentration, permettant de créer des rappels, d’organiser des listes, de suivre les tâches planifiées et prioritaires, et de lancer des sessions de concentration."
+    },
+    tags: ["Next.js", "React", "Tailwind"],
+    github: "https://github.com/TanjilRafi",
+    live: "https://my-reminer-app.vercel.app/"
   }
 ];
 
