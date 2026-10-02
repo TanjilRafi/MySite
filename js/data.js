@@ -37,6 +37,11 @@ const PROJECTS = [
     id: "beefstock",
     title: "BeefStock",
     accent: "cyan",
+    image: "assets/projects/beefstock.jpg",
+    imageAlt: {
+      en: "BeefStock landing page promoting market education, virtual cash practice, and no-investment-advice safeguards.",
+      fr: "Page d’accueil de BeefStock présentant l’éducation aux marchés, la pratique avec de l’argent virtuel et des garde-fous contre les conseils en investissement."
+    },
     desc: {
       en: "A full-stack paper-trading education platform teaching market mechanics through RSI/MACD/SMA indicator math and $100,000 in risk-free paper trading — no real money, no personalized buy/sell advice. Ships a shared types layer between the React front end and Express API, plus an LLM-ready chatbot seam with safety guardrails enforced on every data and chat screen.",
       fr: "Une plateforme éducative full-stack de trading simulé enseignant la mécanique des marchés via les indicateurs RSI/MACD/SMA et 100 000 $ de trading fictif sans risque — sans argent réel ni conseils d'achat/vente personnalisés. Comprend une couche de types partagée entre le front-end React et l'API Express, ainsi qu'une intégration prête pour un chatbot LLM avec des garde-fous de sécurité sur chaque écran de données et de discussion."
@@ -49,6 +54,11 @@ const PROJECTS = [
     id: "specaqi",
     title: "SpecAQI",
     accent: "green",
+    image: "assets/projects/specaqi.jpg",
+    imageAlt: {
+      en: "SpecAQI home screen with a location search bar over a forest background.",
+      fr: "Écran d’accueil de SpecAQI avec une barre de recherche de lieu sur un arrière-plan forestier."
+    },
     desc: {
       en: "Built at the HackED Hackathon (University of Alberta): a full-stack app reporting air quality for one specific place — a park, beach, campsite, or mall — rather than a city-wide average. Integrates the PurpleAir sensor network with an OpenWeatherMap fallback via secure server-side Next.js API routes, then estimates AQI at a chosen point using the Haversine formula and Inverse Distance Weighting.",
       fr: "Créé au hackathon HackED (Université de l'Alberta) : une application full-stack qui indique la qualité de l'air d'un lieu précis — parc, plage, camping ou centre commercial — plutôt qu'une moyenne à l'échelle de la ville. Intègre le réseau de capteurs PurpleAir avec un repli sur OpenWeatherMap via des routes API Next.js sécurisées côté serveur, puis estime l'IQA d'un point choisi avec la formule de Haversine et la pondération par distance inverse."
@@ -83,8 +93,13 @@ const PROJECTS = [
   },
   {
     id: "reminders",
-    title: "Reminders",
+    title: "Reminder AI",
     accent: "green",
+    image: "assets/projects/reminder-ai.jpg",
+    imageAlt: {
+      en: "Reminder AI dashboard showing task lists, scheduled and flagged reminders, and a monthly calendar.",
+      fr: "Tableau de bord de Reminder AI affichant des listes de tâches, des rappels planifiés et signalés, ainsi qu’un calendrier mensuel."
+    },
     desc: {
       en: "A focus-friendly task and reminder dashboard for creating reminders, organizing them into lists, tracking scheduled and flagged tasks, and launching focus sessions.",
       fr: "Un tableau de bord de tâches et de rappels pensé pour la concentration, permettant de créer des rappels, d’organiser des listes, de suivre les tâches planifiées et prioritaires, et de lancer des sessions de concentration."

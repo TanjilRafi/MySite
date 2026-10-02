@@ -20,7 +20,7 @@ it runs.
 - **Hero / About** — introduction and bio
 - **Tech Stack** — React.js, Next.js, TypeScript, Java, Python, Express, SQL, Supabase, Git, macOS Terminal
 - **Experience** — vertical timeline (Software Developer Intern @ Nexfolyo, Teaching Assistant @ University of Alberta)
-- **Projects** — BeefStock, SpecAQI, DarkOrchid, AI Search Solvers, Reminders, Riftfall Arena
+- **Projects** — BeefStock, SpecAQI, DarkOrchid, AI Search Solvers, Reminder AI, Riftfall Arena
 - **Contact** — email and social links
 
 ## Tech Stack (this repo)
