@@ -667,6 +667,20 @@ main, .navbar, .footer{ position: relative; z-index: 1; }
   color: rgba(255,255,255,0.85);
   letter-spacing: .5px;
 }
+.project-card__cover--image{
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+.project-card__image{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
 
 .project-card__links{
   position: absolute;

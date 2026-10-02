@@ -92,6 +92,23 @@ const PROJECTS = [
     tags: ["Next.js", "React", "Tailwind"],
     github: "https://github.com/TanjilRafi",
     live: "https://my-reminer-app.vercel.app/"
+  },
+  {
+    id: "riftfall-arena",
+    title: "Riftfall Arena",
+    accent: "purple",
+    image: "assets/projects/riftfall-arena.jpg",
+    imageAlt: {
+      en: "Riftfall Arena artwork showing a futuristic floating arena and a scoped rifle.",
+      fr: "Illustration de Riftfall Arena montrant une arène futuriste flottante et un fusil à lunette."
+    },
+    desc: {
+      en: "An Unreal Engine 5 C++ arena shooter built around a modular Gameplay Ability System. Features client-predicted, server-validated combat abilities, server-authoritative field interactions, Chaos-based destructible arenas, and diegetic combat UI.",
+      fr: "Un jeu de tir d’arène en C++ sous Unreal Engine 5, construit autour d’un système de capacités de jeu modulaire. Il comprend des capacités de combat prédites côté client et validées côté serveur, des interactions de champs autoritaires côté serveur, des arènes destructibles avec Chaos et une interface de combat diégétique."
+    },
+    tags: ["Unreal Engine 5", "C++", "Gameplay Ability System", "Chaos Physics"],
+    github: "https://github.com/TanjilRafi/VanceRPG",
+    live: null
   }
 ];
 
@@ -99,5 +116,6 @@ const TAG_COLORS = {
   "React": "var(--cyan)", "TypeScript": "var(--purple)", "Express": "var(--green)", "Supabase": "var(--cyan)",
   "Next.js": "var(--cyan)", "Tailwind": "var(--green)", "Leaflet": "var(--purple)",
   "Java": "var(--purple)", "Android Studio": "var(--green)", "Firebase": "var(--cyan)", "JUnit": "var(--purple)",
-  "Python": "var(--green)", "AI": "var(--purple)", "Algorithms": "var(--cyan)"
+  "Python": "var(--green)", "AI": "var(--purple)", "Algorithms": "var(--cyan)",
+  "Unreal Engine 5": "var(--purple)", "C++": "var(--green)", "Gameplay Ability System": "var(--cyan)", "Chaos Physics": "var(--purple)"
 };
